@@ -1,0 +1,27 @@
+{
+  "name": "stockx-api",
+  "version": "3.0.0",
+  "description": "StockX Public API node package",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint \"**/*.{js,ts,tsx}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/albertogferrario/javascript-stockx-api.git"
+  },
+  "author": "Alberto Giancarlo Ferrario",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/albertogferrario/javascript-stockx-api/issues"
+  },
+  "homepage": "https://github.com/albertogferrario/javascript-stockx-api#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-mock-axios": "^4.7.3"
+  },
+  "dependencies": {
+    "axios": "^1.7.2"
+  }
+}
