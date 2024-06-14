@@ -1,5 +1,5 @@
 {
-  "name": "stockx-api",
+  "name": "@albertogferrario/stockx-api",
   "version": "3.0.0",
   "description": "StockX Public API node package",
   "main": "index.js",
