@@ -1,8 +1,8 @@
-import {Catalog} from "./src/api";
-import { BASE_URL } from "./config";
-import Client from "./src/client";
+const { Catalog } = require("./src/api");
+const { BASE_URL } = require("./config");
+const Client = require("./src/client");
 
-export default class StockxApi {
+module.exports = class StockxApi {
   constructor(apiToken, jwt, baseUrl = undefined) {
     const client = new Client(baseUrl || BASE_URL, apiToken, jwt);
 

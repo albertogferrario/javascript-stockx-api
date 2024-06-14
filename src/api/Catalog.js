@@ -1,6 +1,6 @@
-import AbstractResource from "./AbstractResource";
+const AbstractResource = require("./AbstractResource");
 
-export default class Catalog extends AbstractResource {
+module.exports = class Catalog extends AbstractResource {
   getProductVariants = async (productId) => this.client.get(`/catalog/products/${productId}/variants`);
 
   getVariantMarketData = async (productId, variantId, currencyCode) => {

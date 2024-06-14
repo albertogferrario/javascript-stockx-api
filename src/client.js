@@ -1,6 +1,7 @@
-import axios, {Axios} from "axios";
+const axios = require("axios").default;
+const { Axios } = require("axios");
 
-export default class Client extends Axios {
+module.exports = class Client extends Axios {
   constructor(baseUrl, apiKey, jwt) {
     super({
       ...axios.defaults,

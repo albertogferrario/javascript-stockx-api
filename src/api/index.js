@@ -1,5 +1,5 @@
-import Catalog from "./Catalog";
+const Catalog = require("./Catalog");
 
-export {
+module.exports = {
   Catalog,
 };
