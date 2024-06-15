@@ -1,7 +1,7 @@
 const AbstractResource = require("./AbstractResource");
 
 module.exports = class Catalog extends AbstractResource {
-  getProductVariants = async (productId) => this.client.get(`/catalog/products/${productId}/variants`);
+  getVariants = async (productId) => this.client.get(`/catalog/products/${productId}/variants`);
 
   getVariantMarketData = async (productId, variantId, currencyCode) => {
     const query = new URLSearchParams({
@@ -21,12 +21,12 @@ module.exports = class Catalog extends AbstractResource {
       throw new Error('pageSize query param must be between 1 and 50');
     }
 
-    const _query = new URLSearchParams({
+    const query_ = new URLSearchParams({
       query,
       pageNumber,
       pageSize
     }).toString();
 
-    return this.client.get(`/catalog/search?${_query}`);
+    return this.client.get(`/catalog/search?${query_}`);
   };
 }
