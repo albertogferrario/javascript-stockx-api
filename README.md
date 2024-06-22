@@ -11,15 +11,12 @@ npm i @albertogferrario/stockx-api
 
 ## Usage
 
-Init client
+Init
 
 ```javascript
-const { StockxApi } = require("stockx-api");
+const StockxApi = require("@albertogferrario/stockx-api");
 
-const client = new StockxApi({
-    apiKey: <API_KEY>,
-    jwt: <JWT>,
-});
+const stockxApi = new StockxApi(<API_KEY>, <JWT>);
 ```
 
 ### Catalog
