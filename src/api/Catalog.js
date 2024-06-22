@@ -8,7 +8,7 @@ module.exports = class Catalog extends AbstractResource {
       currencyCode,
     }).toString();
 
-    return (await this.client.get(`/catalog/products/${productId}/variants/${variantId}/market-data?${query}`).data);
+    return (await this.client.get(`/catalog/products/${productId}/variants/${variantId}/market-data?${query}`)).data;
   };
 
 
