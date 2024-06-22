@@ -1,14 +1,14 @@
 const AbstractResource = require("./AbstractResource");
 
 module.exports = class Catalog extends AbstractResource {
-  getVariants = async (productId) => this.client.get(`/catalog/products/${productId}/variants`);
+  getVariants = async (productId) => (await this.client.get(`/catalog/products/${productId}/variants`)).data;
 
   getVariantMarketData = async (productId, variantId, currencyCode) => {
     const query = new URLSearchParams({
       currencyCode,
     }).toString();
 
-    return this.client.get(`/catalog/products/${productId}/variants/${variantId}/market-data?${query}`);
+    return (await this.client.get(`/catalog/products/${productId}/variants/${variantId}/market-data?${query}`).data);
   };
 
 
@@ -27,6 +27,6 @@ module.exports = class Catalog extends AbstractResource {
       pageSize
     }).toString();
 
-    return this.client.get(`/catalog/search?${query_}`);
+    return (await this.client.get(`/catalog/search?${query_}`)).data;
   };
 }
