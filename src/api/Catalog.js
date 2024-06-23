@@ -1,6 +1,6 @@
 const AbstractResource = require("./AbstractResource");
 
-module.exports = class Catalog extends AbstractResource {
+class Catalog extends AbstractResource {
   getVariants = async (productId) => (await this.client.get(`/catalog/products/${productId}/variants`)).data;
 
   getVariantMarketData = async (productId, variantId, currencyCode) => {
@@ -30,3 +30,5 @@ module.exports = class Catalog extends AbstractResource {
     return (await this.client.get(`/catalog/search?${query_}`)).data;
   };
 }
+
+module.exports = Catalog;
