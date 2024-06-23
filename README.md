@@ -1,7 +1,7 @@
 
 # StockX API
 
-Offical StockX API Node package (official API docs [here](https://developer.stockx.com/openapi/reference/overview))
+Offical StockX API Node package (see [official docs](https://developer.stockx.com/openapi/reference/overview) & [example](https://github.com/albertogferrario/javascript-stockx-api-example))
 
 ## Install
 
@@ -11,7 +11,7 @@ npm i @albertogferrario/stockx-api
 
 ## Usage
 
-Init
+### Init
 
 ```javascript
 const StockxApi = require("@albertogferrario/stockx-api");
