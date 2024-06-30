@@ -12,13 +12,13 @@ class Client extends Axios {
     this.limiter = limiter;
   }
 
-  get = (url, config) => this.limiter.schedule(() => super.get(url, config));
+  get = async (url, config) => await this.limiter.schedule(() => super.get(url, config));
 
-  post = (url, data, config) => this.limiter.schedule(() => super.post(url, data, config));
+  post = async (url, data, config) => await this.limiter.schedule(() => super.post(url, data, config));
 
-  put = (url, data, config) => this.limiter.schedule(() => super.put(url, data, config));
+  put = async (url, data, config) => await this.limiter.schedule(() => super.put(url, data, config));
 
-  delete = (url, config) => this.limiter.schedule(() => super.delete(url, config));
+  delete = async (url, config) => await this.limiter.schedule(() => super.delete(url, config));
 }
 
 module.exports = Client;

@@ -1,7 +1,8 @@
 const Bottleneck = require("bottleneck");
 const cron = require("cron");
 const {getMillisecondsToNextCronExpressionTick} = require("./utilities");
-const cronParser = require("cron-parser");
+
+BOTTLENECK_RESERVOIR_REFRESH_INTERVAL_PRECISION = 250;
 
 class Limiter extends Bottleneck {
   constructor(minTime, reservoirAmount, reservoirRefreshCronExpression) {
@@ -9,24 +10,27 @@ class Limiter extends Bottleneck {
       minTime,
       reservoir: reservoirAmount,
       reservoirRefreshAmount: reservoirAmount,
-      reservoirRefreshInterval: getMillisecondsToNextCronExpressionTick(reservoirRefreshCronExpression),
+      reservoirRefreshInterval: getMillisecondsToNextCronExpressionTick(
+        reservoirRefreshCronExpression,
+        BOTTLENECK_RESERVOIR_REFRESH_INTERVAL_PRECISION,
+      ),
       maxConcurrent: 1,
     });
 
-    this.initReservoirRefreshCron(reservoirRefreshCronExpression);
+    this.initReservoirRefreshCron(reservoirAmount, reservoirRefreshCronExpression);
   }
 
-  initReservoirRefreshCron(expression) {
+  initReservoirRefreshCron(amount, expression) {
     const cronJob = new cron.CronJob(expression, () => {
-      this.limiter.updateSettings({
-        reservoirRefreshInterval: getMillisecondsToNextCronExpressionTick(expression)
+      this.updateSettings({
+        reservoir: amount,
+        reservoirRefreshInterval: getMillisecondsToNextCronExpressionTick(
+          expression,
+          BOTTLENECK_RESERVOIR_REFRESH_INTERVAL_PRECISION,
+        ),
       });
     });
     cronJob.start();
-  }
-
-  getMillisecondsToNextCronExpressionTick(cronExpression) {
-    return cronParser.parseExpression(cronExpression).next().toDate() - (new Date());
   }
 }
 
