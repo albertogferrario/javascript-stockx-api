@@ -1,6 +1,6 @@
 {
   "name": "@albertogferrario/stockx-api",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "StockX Public API node package",
   "main": "index.js",
   "scripts": {
