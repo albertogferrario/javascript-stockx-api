@@ -9,8 +9,6 @@ async function timeoutPromise(promise, timeout) {
     setTimeout(() => reject(new Error('Request timed out')), timeout)
   );
 
-  console.info('Executing promise...');  // fixme: debugging... remind to remove
-
   return Promise.race([promise, timeoutPromise_]);
 }
 
