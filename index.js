@@ -1,38 +1,33 @@
 const {Catalog} = require("./src/api");
-const {
-  BASE_URL, REQUEST_RATE_LIMIT_MIN_TIME, REQUEST_RATE_LIMIT_RESERVOIR_AMOUNT,
-  REQUEST_RATE_LIMIT_RESERVOIR_REFRESH_CRON_EXPRESSION,
-} = require("./config");
+const defaultConfig = require("./config");
 const Client = require("./src/client");
 const Limiter = require("./src/limiter");
 
-function makeClient(apiKey, jwt, limiter) {
+function makeClient(baseUrl, apiKey, jwt, limiter, requestTimeout) {
   return new Client(
-    BASE_URL,
+    baseUrl,
     {
       Accept: 'application/json',
       'x-api-key': apiKey,
       Authorization: `Bearer ${jwt}`,
     },
     limiter,
-  );
-}
-
-function makeLimiter() {
-  return new Limiter(
-    REQUEST_RATE_LIMIT_MIN_TIME,
-    REQUEST_RATE_LIMIT_RESERVOIR_AMOUNT,
-    REQUEST_RATE_LIMIT_RESERVOIR_REFRESH_CRON_EXPRESSION,
+    requestTimeout,
   );
 }
 
 class StockxApi {
-  constructor(apiKey, jwt) {
+  constructor(apiKey, jwt, config = undefined) {
     this.apiKey = apiKey;
     this.jwt = jwt;
-    this.limiter = makeLimiter();
+    this.config = config ? {...defaultConfig, ...config} : defaultConfig;
+    this.limiter = new Limiter(
+      this.config.requestRateLimitMinTime,
+      this.config.requestRateLimitReservoirAmount,
+      this.config.requestRateLimitReservoirRefreshCronExpression,
+    );
 
-    this.initResources(makeClient(this.apiKey, this.jwt, this.limiter))
+    this.initResources(makeClient(this.config.baseUrl, this.apiKey, this.jwt, this.limiter, this.config.requestTimeout));
   }
 
   initResources(client) {
@@ -42,7 +37,7 @@ class StockxApi {
   updateJwt(jwt) {
     this.jwt = jwt;
 
-    this.initResources(makeClient(this.apiKey, this.jwt, this.limiter));
+    this.initResources(makeClient(this.config.baseUrl, this.apiKey, this.jwt, this.limiter, this.config.requestTimeout));
   }
 }
 
