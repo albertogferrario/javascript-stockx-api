@@ -1,6 +1,6 @@
 # StockX API
 
-Offical StockX API Node package (
+StockX API Node interface package (
 see [official docs](https://developer.stockx.com/openapi/reference/overview) & [example](https://github.com/albertogferrario/javascript-stockx-api-example))
 
 ## Install
