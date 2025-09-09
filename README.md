@@ -6,13 +6,13 @@ Node.js wrapper for the StockX Public API with built-in OAuth2 helpers and rate 
 
 ## Features
 
-- 🔐 OAuth2 helper utilities for authentication flows
-- 🔄 Automatic token refresh with request interceptors
-- ⏱️ Built-in rate limiting (25,000 requests/day)
-- 📦 Full TypeScript support
-- 🛡️ Secure token storage options
-- 🚀 Promise-based async/await API
-- 📝 Comprehensive error handling
+- OAuth2 helper utilities for authentication flows
+- Automatic token refresh with request interceptors
+- Built-in rate limiting (25,000 requests/day)
+- Full TypeScript support
+- Secure token storage options
+- Promise-based async/await API
+- Comprehensive error handling
 
 ## Installation
 
@@ -269,14 +269,14 @@ const REDIRECT_URI = 'http://localhost:3000/callback';
 app.get('/auth', (req, res) => {
   const pkce = helpers.auth.generatePKCE();
   req.session.verifier = pkce.verifier;
-  
+
   const authUrl = helpers.auth.buildAuthUrl(
     'https://accounts.stockx.com/oauth',
     CLIENT_ID,
     REDIRECT_URI,
     ['offline_access', 'openid']
   );
-  
+
   res.redirect(authUrl);
 });
 
@@ -284,7 +284,7 @@ app.get('/auth', (req, res) => {
 app.get('/callback', async (req, res) => {
   try {
     const { code } = helpers.auth.parseAuthCode(req.url);
-    
+
     // Exchange code for tokens
     const tokenResponse = await helpers.refresh.refreshToken(
       code,
@@ -292,15 +292,15 @@ app.get('/callback', async (req, res) => {
       CLIENT_SECRET,
       'https://accounts.stockx.com/oauth/token'
     );
-    
+
     const tokens = helpers.token.parse(tokenResponse);
-    
+
     // Create API instance
     const stockxApi = new StockxApi('your-api-key', tokens.accessToken);
-    
+
     // Store tokens securely
     await tokenStore.set('user-123', tokens);
-    
+
     res.json({ success: true });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -320,7 +320,7 @@ const tokenStore = helpers.storage.createFileStore('./tokens.json');
 async function createApiClient() {
   const tokens = await tokenStore.get('tokens');
   const api = new StockxApi('your-api-key', tokens.accessToken);
-  
+
   // Add automatic refresh
   helpers.refresh.createInterceptor(api.client, {
     onRefresh: async () => {
@@ -330,17 +330,17 @@ async function createApiClient() {
         CLIENT_SECRET,
         'https://accounts.stockx.com/oauth/token'
       );
-      
+
       const parsed = helpers.token.parse(newTokens);
       await tokenStore.set('tokens', parsed);
-      
+
       // Update the API instance
       api.updateJwt(parsed.accessToken);
-      
+
       return parsed.accessToken;
     }
   });
-  
+
   return api;
 }
 
@@ -357,14 +357,14 @@ const { helpers } = StockxApi;
 // Check token expiry before requests
 async function makeApiCall() {
   const tokens = await tokenStore.get('tokens');
-  
+
   // Check if token expires in next 5 minutes
   if (helpers.token.isExpired(tokens.accessToken, 300)) {
     // Refresh token
     const newTokens = await refreshTokens();
     await tokenStore.set('tokens', newTokens);
   }
-  
+
   const api = new StockxApi('your-api-key', tokens.accessToken);
   return await api.catalog.search('Nike');
 }
@@ -381,7 +381,7 @@ try {
   if (error.response) {
     // API error response
     console.error('API Error:', error.response.status, error.response.data);
-    
+
     if (error.response.status === 401) {
       // Token expired - refresh and retry
     } else if (error.response.status === 429) {
