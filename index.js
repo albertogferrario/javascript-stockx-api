@@ -42,3 +42,4 @@ class StockxApi {
 }
 
 module.exports = StockxApi;
+module.exports.helpers = require('./src/helpers');
