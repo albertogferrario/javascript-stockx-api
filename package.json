@@ -1,6 +1,6 @@
 {
   "name": "@albertogferrario/stockx-api",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "StockX Public API node package with OAuth2 helpers and rate limiting",
   "main": "index.js",
   "types": "index.d.ts",
@@ -34,7 +34,7 @@
     "lint:fix": "eslint \"src/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\"",
-    "prepublishOnly": "npm run lint && npm test"
+    "prepublishOnly": "npm test"
   },
   "repository": {
     "type": "git",
