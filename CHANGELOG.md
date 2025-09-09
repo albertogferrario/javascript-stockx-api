@@ -5,9 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.1] - 2025-01-09
+## [1.2.0] - 2025-01-09
 
 ### Added
+- OAuth2 helper utilities for authentication flows
+  - `auth.js` - URL builders, PKCE support, auth code parsing
+  - `token.js` - JWT parsing, expiry checking, token response parsing
+  - `refresh.js` - Axios interceptor for automatic token refresh
+  - `storage.js` - Token storage interface with memory and file implementations
 - Comprehensive test suite with 57 tests for all modules
 - TypeScript declaration files (.d.ts) for better IDE support
 - GitHub Actions workflows for CI/CD (test matrix, lint, publish)
@@ -21,8 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Enhanced package.json with better organization and metadata
+- Updated README with complete documentation and OAuth2 examples
 
-## [1.1.0] - 2025-01-09
+### Security
+- Added `.npmignore` to prevent publishing sensitive files
+- Token storage supports encryption for file-based storage
+
+## [1.1.0] - 2025-01-09 (Never Published)
 
 ### Added
 - OAuth2 helper utilities for authentication flows
@@ -60,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Limiter reservoir refresh logic (cron)
 
-[1.1.1]: https://github.com/albertogferrario/javascript-stockx-api/compare/v1.1.0...v1.1.1
+[1.2.0]: https://github.com/albertogferrario/javascript-stockx-api/compare/v1.0.9...v1.2.0
 [1.1.0]: https://github.com/albertogferrario/javascript-stockx-api/compare/v1.0.9...v1.1.0
 [1.0.9]: https://github.com/albertogferrario/javascript-stockx-api/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/albertogferrario/javascript-stockx-api/releases/tag/v1.0.8
