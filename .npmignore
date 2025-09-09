@@ -1,3 +1,99 @@
-node_modules
-package-lock.json
+# Development files
+.git/
+.github/
 .idea/
+.vscode/
+*.log
+*.swp
+.DS_Store
+
+# Test files
+tests/
+test/
+__tests__/
+*.test.js
+*.spec.js
+coverage/
+.nyc_output/
+
+# Config files
+.eslintrc*
+.prettierrc*
+.gitignore
+.npmignore
+jest.config.js
+babel.config.js
+tsconfig.json
+
+# Documentation source files
+docs/
+*.md
+!README.md
+!LICENSE
+
+# Example files
+examples/
+
+# CI/CD
+.travis.yml
+.circleci/
+appveyor.yml
+
+# Development dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# IDE specific files
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+# OS files
+Thumbs.db
+
+# Source maps
+*.map
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Package manager files
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Build artifacts that shouldn't be published
+dist/
+build/
+out/
+.cache/
+
+# Personal notes
+TODO
+NOTES
+notes.txt
+
+# Claude.ai specific
+CLAUDE.md

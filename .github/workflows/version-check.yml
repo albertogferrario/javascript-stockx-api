@@ -1,0 +1,29 @@
+name: Version Check
+
+on:
+  pull_request:
+    paths:
+      - 'package.json'
+      - 'CHANGELOG.md'
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Check version consistency
+      run: |
+        # Get package.json version
+        PACKAGE_VERSION=$(node -p "require('./package.json').version")
+        echo "Package version: $PACKAGE_VERSION"
+        
+        # Check if version exists in CHANGELOG.md
+        if ! grep -q "## \[$PACKAGE_VERSION\]" CHANGELOG.md; then
+          echo "Error: Version $PACKAGE_VERSION not found in CHANGELOG.md"
+          echo "Please add a changelog entry for version $PACKAGE_VERSION"
+          exit 1
+        fi
+        
+        echo "✅ Version $PACKAGE_VERSION is properly documented in CHANGELOG.md"

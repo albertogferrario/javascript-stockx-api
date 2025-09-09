@@ -2,7 +2,7 @@ const Bottleneck = require("bottleneck");
 const cron = require("cron");
 const {getMillisecondsToNextCronExpressionTick} = require("./utilities");
 
-BOTTLENECK_RESERVOIR_REFRESH_INTERVAL_PRECISION = 250;
+const BOTTLENECK_RESERVOIR_REFRESH_INTERVAL_PRECISION = 250;
 
 class Limiter extends Bottleneck {
   constructor(minTime, reservoirAmount, reservoirRefreshCronExpression) {

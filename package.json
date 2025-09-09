@@ -1,11 +1,40 @@
 {
   "name": "@albertogferrario/stockx-api",
-  "version": "1.0.9",
-  "description": "StockX Public API node package",
+  "version": "1.1.1",
+  "description": "StockX Public API node package with OAuth2 helpers and rate limiting",
   "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "config.js",
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "stockx",
+    "api",
+    "stockx-api",
+    "sneakers",
+    "marketplace",
+    "oauth2",
+    "authentication",
+    "rate-limiting"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "test": "jest",
-    "lint": "eslint \"**/*.{js,ts,tsx}\""
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint \"src/**/*.js\"",
+    "lint:fix": "eslint \"src/**/*.js\" --fix",
+    "format": "prettier --write \"src/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\"",
+    "prepublishOnly": "npm run lint && npm test"
   },
   "repository": {
     "type": "git",
