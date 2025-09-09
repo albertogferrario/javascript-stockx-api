@@ -11,6 +11,15 @@ class Catalog extends AbstractResource {
     return (await this.client.get(`/catalog/products/${productId}/variants/${variantId}/market-data?${query}`)).data;
   };
 
+  getProductBySlug = async (slug) => {
+    const searchResults = await this.search(slug, 1, 1);
+    if (searchResults.length === 0) {
+      throw new Error(`Product not found with slug: ${slug}`);
+    }
+    
+    // Return the first matching product (contains full product data including UUID)
+    return searchResults[0];
+  };
 
   search = async (query, pageNumber = 1, pageSize = 10) => {
     if (pageNumber < 1) {

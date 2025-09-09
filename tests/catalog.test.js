@@ -48,6 +48,38 @@ describe('Catalog', () => {
     });
   });
 
+  describe('getProductBySlug', () => {
+    it('should get product by slug successfully', async () => {
+      const mockProduct = {
+        id: 'c318bbcc-312a-4396-9252-698c203d1dea',
+        title: 'Nike Air Max 90',
+        slug: 'nike-air-max-90',
+        brand: 'Nike',
+        category: 'sneakers'
+      };
+      
+      const mockResponse = {
+        data: [mockProduct]
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await catalog.getProductBySlug('nike-air-max-90');
+
+      expect(mockClient.get).toHaveBeenCalledWith(
+        '/catalog/search?query=nike-air-max-90&pageNumber=1&pageSize=1'
+      );
+      expect(result).toEqual(mockProduct);
+    });
+
+    it('should throw error when product not found', async () => {
+      const mockResponse = { data: [] };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      await expect(catalog.getProductBySlug('non-existent-product'))
+        .rejects.toThrow('Product not found with slug: non-existent-product');
+    });
+  });
+
   describe('search', () => {
     it('should search with default parameters', async () => {
       const mockResponse = {

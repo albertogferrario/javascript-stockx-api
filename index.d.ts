@@ -57,6 +57,7 @@ declare namespace StockxApi {
     constructor(client: any);
     
     search(query: string, pageNumber?: number, pageSize?: number): Promise<SearchResult[]>;
+    getProductBySlug(slug: string): Promise<SearchResult>;
     getVariants(productId: string): Promise<Variant[]>;
     getVariantMarketData(productId: string, variantId: string, currencyCode: string): Promise<MarketData>;
   }

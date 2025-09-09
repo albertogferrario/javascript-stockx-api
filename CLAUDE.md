@@ -34,9 +34,10 @@ The codebase follows a layered architecture:
 4. **API Resources** (`src/api/`):
    - Abstract base class pattern (`AbstractResource.js`)
    - `Catalog` class implements StockX catalog endpoints:
-     - `getVariants(productId)`
-     - `getVariantMarketData(productId, variantId, currencyCode)`
      - `search(query, pageNumber, pageSize)`
+     - `getProductBySlug(slug)` - Get product by slug/urlKey, returns product with UUID
+     - `getVariants(productId)` - Requires UUID format, not slug
+     - `getVariantMarketData(productId, variantId, currencyCode)` - Requires UUID format
 
 ## Configuration
 

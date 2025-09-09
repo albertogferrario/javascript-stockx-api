@@ -31,13 +31,16 @@ const stockxApi = new StockxApi('your-api-key', 'your-jwt-token');
 // Search for products
 const results = await stockxApi.catalog.search('Jordan 1', 1, 20);
 
-// Get product variants
-const variants = await stockxApi.catalog.getVariants('product-id');
+// Get product by slug
+const product = await stockxApi.catalog.getProductBySlug('air-jordan-1-retro-high-og-chicago');
+
+// Get product variants using UUID
+const variants = await stockxApi.catalog.getVariants(product.id);
 
 // Get market data
 const marketData = await stockxApi.catalog.getVariantMarketData(
-  'product-id',
-  'variant-id',
+  product.id,
+  variants[0].id,
   'USD'
 );
 ```
@@ -110,28 +113,44 @@ Search for products in the StockX catalog.
 const results = await stockxApi.catalog.search('Nike Air Max', 1, 20);
 ```
 
+#### catalog.getProductBySlug(slug)
+
+Get product details by slug/urlKey. This method is useful when you have a product slug and need to get the UUID for other API calls.
+
+- `slug` (string): Product slug/urlKey (e.g., 'nike-air-max-90')
+
+```javascript
+const product = await stockxApi.catalog.getProductBySlug('nike-air-max-90');
+console.log(product.id); // UUID: c318bbcc-312a-4396-9252-698c203d1dea
+```
+
 #### catalog.getVariants(productId)
 
 Get all variants for a specific product.
 
-- `productId` (string): StockX product ID
+- `productId` (string): StockX product UUID (not slug)
 
 ```javascript
-const variants = await stockxApi.catalog.getVariants('nike-air-max-90');
+// First get the product UUID
+const product = await stockxApi.catalog.getProductBySlug('nike-air-max-90');
+// Then get variants using the UUID
+const variants = await stockxApi.catalog.getVariants(product.id);
 ```
 
 #### catalog.getVariantMarketData(productId, variantId, currencyCode)
 
 Get market data for a specific variant.
 
-- `productId` (string): StockX product ID
+- `productId` (string): StockX product UUID (not slug)
 - `variantId` (string): Variant ID
 - `currencyCode` (string): Currency code (e.g., 'USD', 'EUR')
 
 ```javascript
+const product = await stockxApi.catalog.getProductBySlug('nike-air-max-90');
+const variants = await stockxApi.catalog.getVariants(product.id);
 const marketData = await stockxApi.catalog.getVariantMarketData(
-  'nike-air-max-90',
-  'variant-123',
+  product.id,
+  variants[0].id,
   'USD'
 );
 ```

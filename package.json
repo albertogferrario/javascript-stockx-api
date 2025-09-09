@@ -1,6 +1,6 @@
 {
   "name": "@albertogferrario/stockx-api",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "StockX Public API node package with OAuth2 helpers and rate limiting",
   "main": "index.js",
   "types": "index.d.ts",
