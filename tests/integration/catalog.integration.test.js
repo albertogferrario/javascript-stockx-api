@@ -45,7 +45,7 @@ testSuite('StockX API Integration Tests', () => {
   let testProduct;
   let currentTest = '';
   let testStartTime;
-  const testSlug = process.env.TEST_PRODUCT_SLUG || 'air-jordan-1-retro-high-og-chicago-reimagined';
+  const testSlug = process.env.TEST_PRODUCT_SLUG || 'nike-dunk-high-next-nature-summit-white-w';
 
   beforeAll(() => {
     log('Initializing StockX API client...');
@@ -143,11 +143,16 @@ testSuite('StockX API Integration Tests', () => {
       try {
         testProduct = await stockxApi.catalog.getProductBySlug(testSlug);
         
-        log(`Product found:`);
+        log(`Product found with exact urlKey match:`);
         log(`  Title: ${testProduct.title}`);
         log(`  Product ID: ${testProduct.productId}`);
+        log(`  URL Key: ${testProduct.urlKey}`);
         log(`  Brand: ${testProduct.brand}`);
         log(`  Style ID: ${testProduct.styleId}`);
+        
+        // Verify exact match
+        expect(testProduct.urlKey).toBe(testSlug);
+        log(`✓ URL key matches requested slug exactly`);
         
         logVerbose('Product details:', testProduct);
 

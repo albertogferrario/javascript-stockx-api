@@ -118,15 +118,17 @@ const products = searchResponse.products;
 
 #### catalog.getProductBySlug(slug)
 
-Get product details by slug/urlKey. This method is useful when you have a product slug and need to get the UUID for other API calls.
+Get product details by slug/urlKey. This method searches for products and returns the one with an exact `urlKey` match. This ensures you get the correct product even if the search returns similar products.
 
 - `slug` (string): Product slug/urlKey (e.g., 'nike-air-max-90')
 
 ```javascript
 const product = await stockxApi.catalog.getProductBySlug('nike-air-max-90');
 console.log(product.productId); // UUID: c318bbcc-312a-4396-9252-698c203d1dea
-console.log(product.urlKey); // Slug: nike-air-max-90
+console.log(product.urlKey); // Slug: nike-air-max-90 (exact match guaranteed)
 ```
+
+**Note**: This method performs an exact match on the `urlKey` field to ensure accuracy. If the search returns similar products but none with the exact slug, it will throw an error rather than return a potentially incorrect product.
 
 #### catalog.getVariants(productId)
 

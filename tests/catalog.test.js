@@ -73,7 +73,7 @@ describe('Catalog', () => {
       const result = await catalog.getProductBySlug('nike-air-max-90');
 
       expect(mockClient.get).toHaveBeenCalledWith(
-        '/catalog/search?query=nike-air-max-90&pageNumber=1&pageSize=1'
+        '/catalog/search?query=nike-air-max-90&pageNumber=1&pageSize=10'
       );
       expect(result).toEqual(mockProduct);
     });
@@ -82,7 +82,7 @@ describe('Catalog', () => {
       const mockResponse = { 
         data: {
           count: 0,
-          pageSize: 1,
+          pageSize: 10,
           pageNumber: 1,
           hasNextPage: false,
           products: []
@@ -92,6 +92,59 @@ describe('Catalog', () => {
 
       await expect(catalog.getProductBySlug('non-existent-product'))
         .rejects.toThrow('Product not found with slug: non-existent-product');
+    });
+
+    it('should find exact match when multiple products are returned', async () => {
+      const targetProduct = {
+        productId: 'target-id',
+        urlKey: 'nike-air-max-90',
+        title: 'Nike Air Max 90',
+        brand: 'Nike'
+      };
+      
+      const similarProduct = {
+        productId: 'similar-id',
+        urlKey: 'nike-air-max-90-premium',
+        title: 'Nike Air Max 90 Premium',
+        brand: 'Nike'
+      };
+      
+      const mockResponse = {
+        data: {
+          count: 2,
+          pageSize: 10,
+          pageNumber: 1,
+          hasNextPage: false,
+          products: [similarProduct, targetProduct] // Target is not first
+        }
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await catalog.getProductBySlug('nike-air-max-90');
+
+      expect(result).toEqual(targetProduct);
+      expect(result.urlKey).toBe('nike-air-max-90');
+    });
+
+    it('should throw error when exact match not found in search results', async () => {
+      const mockResponse = {
+        data: {
+          count: 1,
+          pageSize: 10,
+          pageNumber: 1,
+          hasNextPage: false,
+          products: [{
+            productId: 'similar-id',
+            urlKey: 'nike-air-max-90-premium', // Similar but not exact
+            title: 'Nike Air Max 90 Premium',
+            brand: 'Nike'
+          }]
+        }
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      await expect(catalog.getProductBySlug('nike-air-max-90'))
+        .rejects.toThrow('Product not found with slug: nike-air-max-90');
     });
   });
 

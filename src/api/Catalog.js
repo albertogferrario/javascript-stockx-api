@@ -12,13 +12,19 @@ class Catalog extends AbstractResource {
   };
 
   getProductBySlug = async (slug) => {
-    const searchResults = await this.search(slug, 1, 1);
+    const searchResults = await this.search(slug, 1, 10);
     if (!searchResults.products || searchResults.products.length === 0) {
       throw new Error(`Product not found with slug: ${slug}`);
     }
     
-    // Return the first matching product (contains full product data including UUID)
-    return searchResults.products[0];
+    // Find product with exact urlKey match
+    const exactMatch = searchResults.products.find(product => product.urlKey === slug);
+    
+    if (!exactMatch) {
+      throw new Error(`Product not found with slug: ${slug}`);
+    }
+    
+    return exactMatch;
   };
 
   search = async (query, pageNumber = 1, pageSize = 10) => {
