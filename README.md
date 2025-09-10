@@ -120,12 +120,12 @@ const products = searchResponse.products;
 
 Get product details by slug/urlKey. This method searches for products and returns the one with an exact `urlKey` match. This ensures you get the correct product even if the search returns similar products.
 
-- `slug` (string): Product slug/urlKey (e.g., 'nike-air-max-90')
+- `slug` (string): Product slug/urlKey (e.g., 'nike-dunk-low-se-easter-w')
 
 ```javascript
-const product = await stockxApi.catalog.getProductBySlug('nike-air-max-90');
+const product = await stockxApi.catalog.getProductBySlug('nike-dunk-low-se-easter-w');
 console.log(product.productId); // UUID: c318bbcc-312a-4396-9252-698c203d1dea
-console.log(product.urlKey); // Slug: nike-air-max-90 (exact match guaranteed)
+console.log(product.urlKey); // Slug: nike-dunk-low-se-easter-w (exact match guaranteed)
 ```
 
 **Note**: This method performs an exact match on the `urlKey` field to ensure accuracy. If the search returns similar products but none with the exact slug, it will throw an error rather than return a potentially incorrect product.
@@ -138,7 +138,7 @@ Get all variants for a specific product.
 
 ```javascript
 // First get the product UUID
-const product = await stockxApi.catalog.getProductBySlug('nike-air-max-90');
+const product = await stockxApi.catalog.getProductBySlug('nike-dunk-low-se-easter-w');
 // Then get variants using the UUID
 const variants = await stockxApi.catalog.getVariants(product.productId);
 ```
@@ -152,7 +152,7 @@ Get market data for a specific variant.
 - `currencyCode` (string): Currency code (e.g., 'USD', 'EUR')
 
 ```javascript
-const product = await stockxApi.catalog.getProductBySlug('nike-air-max-90');
+const product = await stockxApi.catalog.getProductBySlug('nike-dunk-low-se-easter-w');
 const variants = await stockxApi.catalog.getVariants(product.productId);
 const marketData = await stockxApi.catalog.getVariantMarketData(
   product.productId,

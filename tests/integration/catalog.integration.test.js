@@ -45,7 +45,7 @@ testSuite('StockX API Integration Tests', () => {
   let testProduct;
   let currentTest = '';
   let testStartTime;
-  const testSlug = process.env.TEST_PRODUCT_SLUG || 'nike-dunk-high-next-nature-summit-white-w';
+  const testSlug = process.env.TEST_PRODUCT_SLUG || 'nike-dunk-low-se-easter-w';
 
   beforeAll(() => {
     log('Initializing StockX API client...');

@@ -52,11 +52,11 @@ describe('Catalog', () => {
     it('should get product by slug successfully', async () => {
       const mockProduct = {
         productId: 'c318bbcc-312a-4396-9252-698c203d1dea',
-        urlKey: 'nike-air-max-90',
-        title: 'Nike Air Max 90',
+        urlKey: 'nike-dunk-low-se-easter-w',
+        title: 'Nike Dunk Low SE Easter (W)',
         brand: 'Nike',
         productType: 'sneakers',
-        styleId: 'CW7590-100'
+        styleId: 'DV0815-100'
       };
       
       const mockResponse = {
@@ -70,10 +70,10 @@ describe('Catalog', () => {
       };
       mockClient.get.mockResolvedValue(mockResponse);
 
-      const result = await catalog.getProductBySlug('nike-air-max-90');
+      const result = await catalog.getProductBySlug('nike-dunk-low-se-easter-w');
 
       expect(mockClient.get).toHaveBeenCalledWith(
-        '/catalog/search?query=nike-air-max-90&pageNumber=1&pageSize=10'
+        '/catalog/search?query=nike-dunk-low-se-easter-w&pageNumber=1&pageSize=10'
       );
       expect(result).toEqual(mockProduct);
     });
@@ -97,15 +97,15 @@ describe('Catalog', () => {
     it('should find exact match when multiple products are returned', async () => {
       const targetProduct = {
         productId: 'target-id',
-        urlKey: 'nike-air-max-90',
-        title: 'Nike Air Max 90',
+        urlKey: 'nike-dunk-low-se-easter-w',
+        title: 'Nike Dunk Low SE Easter (W)',
         brand: 'Nike'
       };
       
       const similarProduct = {
         productId: 'similar-id',
-        urlKey: 'nike-air-max-90-premium',
-        title: 'Nike Air Max 90 Premium',
+        urlKey: 'nike-dunk-low-se-easter',
+        title: 'Nike Dunk Low SE Easter',
         brand: 'Nike'
       };
       
@@ -120,10 +120,10 @@ describe('Catalog', () => {
       };
       mockClient.get.mockResolvedValue(mockResponse);
 
-      const result = await catalog.getProductBySlug('nike-air-max-90');
+      const result = await catalog.getProductBySlug('nike-dunk-low-se-easter-w');
 
       expect(result).toEqual(targetProduct);
-      expect(result.urlKey).toBe('nike-air-max-90');
+      expect(result.urlKey).toBe('nike-dunk-low-se-easter-w');
     });
 
     it('should throw error when exact match not found in search results', async () => {
@@ -135,16 +135,16 @@ describe('Catalog', () => {
           hasNextPage: false,
           products: [{
             productId: 'similar-id',
-            urlKey: 'nike-air-max-90-premium', // Similar but not exact
-            title: 'Nike Air Max 90 Premium',
+            urlKey: 'nike-dunk-low-se-easter', // Similar but not exact
+            title: 'Nike Dunk Low SE Easter',
             brand: 'Nike'
           }]
         }
       };
       mockClient.get.mockResolvedValue(mockResponse);
 
-      await expect(catalog.getProductBySlug('nike-air-max-90'))
-        .rejects.toThrow('Product not found with slug: nike-air-max-90');
+      await expect(catalog.getProductBySlug('nike-dunk-low-se-easter-w'))
+        .rejects.toThrow('Product not found with slug: nike-dunk-low-se-easter-w');
     });
   });
 
