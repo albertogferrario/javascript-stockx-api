@@ -28,13 +28,32 @@ declare namespace StockxApi {
     requestRateLimitReservoirRefreshCronExpression?: string;
   }
 
-  interface SearchResult {
-    id: string;
+  interface Product {
+    productId: string;
+    urlKey: string;
+    styleId: string;
+    productType: string;
     title: string;
     brand: string;
-    category: string;
-    imageUrl: string;
+    productAttributes: Record<string, any>;
+    sizeChart: {
+      availableConversions: Array<{
+        name: string;
+        type: string;
+      }>;
+      defaultConversion: Record<string, any>;
+    };
+    isFlexEligible: boolean;
+    isDirectEligible: boolean;
     [key: string]: any;
+  }
+
+  interface SearchResponse {
+    count: number;
+    pageSize: number;
+    pageNumber: number;
+    hasNextPage: boolean;
+    products: Product[];
   }
 
   interface Variant {
@@ -56,8 +75,8 @@ declare namespace StockxApi {
   class Catalog {
     constructor(client: any);
     
-    search(query: string, pageNumber?: number, pageSize?: number): Promise<SearchResult[]>;
-    getProductBySlug(slug: string): Promise<SearchResult>;
+    search(query: string, pageNumber?: number, pageSize?: number): Promise<SearchResponse>;
+    getProductBySlug(slug: string): Promise<Product>;
     getVariants(productId: string): Promise<Variant[]>;
     getVariantMarketData(productId: string, variantId: string, currencyCode: string): Promise<MarketData>;
   }

@@ -51,15 +51,22 @@ describe('Catalog', () => {
   describe('getProductBySlug', () => {
     it('should get product by slug successfully', async () => {
       const mockProduct = {
-        id: 'c318bbcc-312a-4396-9252-698c203d1dea',
+        productId: 'c318bbcc-312a-4396-9252-698c203d1dea',
+        urlKey: 'nike-air-max-90',
         title: 'Nike Air Max 90',
-        slug: 'nike-air-max-90',
         brand: 'Nike',
-        category: 'sneakers'
+        productType: 'sneakers',
+        styleId: 'CW7590-100'
       };
       
       const mockResponse = {
-        data: [mockProduct]
+        data: {
+          count: 1,
+          pageSize: 1,
+          pageNumber: 1,
+          hasNextPage: false,
+          products: [mockProduct]
+        }
       };
       mockClient.get.mockResolvedValue(mockResponse);
 
@@ -72,7 +79,15 @@ describe('Catalog', () => {
     });
 
     it('should throw error when product not found', async () => {
-      const mockResponse = { data: [] };
+      const mockResponse = { 
+        data: {
+          count: 0,
+          pageSize: 1,
+          pageNumber: 1,
+          hasNextPage: false,
+          products: []
+        }
+      };
       mockClient.get.mockResolvedValue(mockResponse);
 
       await expect(catalog.getProductBySlug('non-existent-product'))
@@ -82,12 +97,17 @@ describe('Catalog', () => {
 
   describe('search', () => {
     it('should search with default parameters', async () => {
-      const mockResponse = {
-        data: [
-          { id: 'prod1', title: 'Product 1' },
-          { id: 'prod2', title: 'Product 2' }
+      const mockData = {
+        count: 2,
+        pageSize: 10,
+        pageNumber: 1,
+        hasNextPage: false,
+        products: [
+          { productId: 'prod1', title: 'Product 1', urlKey: 'product-1' },
+          { productId: 'prod2', title: 'Product 2', urlKey: 'product-2' }
         ]
       };
+      const mockResponse = { data: mockData };
       mockClient.get.mockResolvedValue(mockResponse);
 
       const result = await catalog.search('Nike');
@@ -95,11 +115,18 @@ describe('Catalog', () => {
       expect(mockClient.get).toHaveBeenCalledWith(
         '/catalog/search?query=Nike&pageNumber=1&pageSize=10'
       );
-      expect(result).toEqual(mockResponse.data);
+      expect(result).toEqual(mockData);
     });
 
     it('should search with custom parameters', async () => {
-      const mockResponse = { data: [] };
+      const mockData = {
+        count: 0,
+        pageSize: 20,
+        pageNumber: 2,
+        hasNextPage: false,
+        products: []
+      };
+      const mockResponse = { data: mockData };
       mockClient.get.mockResolvedValue(mockResponse);
 
       const result = await catalog.search('Jordan', 2, 20);
@@ -107,7 +134,7 @@ describe('Catalog', () => {
       expect(mockClient.get).toHaveBeenCalledWith(
         '/catalog/search?query=Jordan&pageNumber=2&pageSize=20'
       );
-      expect(result).toEqual(mockResponse.data);
+      expect(result).toEqual(mockData);
     });
 
     it('should throw error for invalid pageNumber', async () => {
