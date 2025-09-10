@@ -40,7 +40,7 @@ const variants = await stockxApi.catalog.getVariants(product.productId);
 // Get market data
 const marketData = await stockxApi.catalog.getVariantMarketData(
   product.productId,
-  variants[0].id,
+  variants[0].variantId,
   'USD'
 );
 ```
@@ -154,7 +154,7 @@ const product = await stockxApi.catalog.getProductBySlug('nike-air-max-90');
 const variants = await stockxApi.catalog.getVariants(product.productId);
 const marketData = await stockxApi.catalog.getVariantMarketData(
   product.productId,
-  variants[0].id,
+  variants[0].variantId,
   'USD'
 );
 ```
@@ -467,12 +467,57 @@ const stockxApi = new StockxApi('api-key', 'jwt', {
 # Install dependencies
 npm install
 
-# Run tests
+# Run unit tests
 npm test
+
+# Run integration tests (requires API credentials)
+npm run test:integration
+
+# Run all tests
+npm run test:all
 
 # Run linter
 npm run lint
 ```
+
+### Integration Testing
+
+This package includes integration tests that test against the real StockX API. To run these tests, you need valid API credentials.
+
+#### Setup
+
+1. Copy the example environment file:
+   ```bash
+   cp .env.test.example .env.test
+   ```
+
+2. Edit `.env.test` and add your StockX API credentials:
+   ```env
+   STOCKX_API_KEY=your-api-key-here
+   STOCKX_JWT_TOKEN=your-jwt-token-here
+   ```
+
+3. Run integration tests:
+   ```bash
+   npm run test:integration
+   ```
+
+#### Test Configuration
+
+The integration tests support the following environment variables in `.env.test`:
+
+- `STOCKX_API_KEY` (required): Your StockX API key
+- `STOCKX_JWT_TOKEN` (required): Your StockX JWT token
+- `TEST_PRODUCT_SLUG` (optional): Product slug to use for testing (default: `air-jordan-1-retro-high-og-chicago-reimagined`)
+- `TEST_TIMEOUT` (optional): Test timeout in milliseconds (default: 30000)
+- `TEST_DELAY` (optional): Delay between API calls in milliseconds (default: 2000)
+
+#### Important Notes
+
+- Integration tests are automatically skipped if credentials are not provided
+- Tests include delays between API calls to respect rate limits
+- The `.env.test` file is gitignored to protect your credentials
+- Integration tests make real API calls and count against your daily rate limit
 
 ## Contributing
 

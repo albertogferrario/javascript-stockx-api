@@ -21,7 +21,7 @@ class Limiter extends Bottleneck {
   }
 
   initReservoirRefreshCron(amount, expression) {
-    const cronJob = new cron.CronJob(expression, () => {
+    this.cronJob = new cron.CronJob(expression, () => {
       this.updateSettings({
         reservoir: amount,
         reservoirRefreshInterval: getMillisecondsToNextCronExpressionTick(
@@ -30,7 +30,14 @@ class Limiter extends Bottleneck {
         ),
       });
     });
-    cronJob.start();
+    this.cronJob.start();
+  }
+
+  stop() {
+    if (this.cronJob) {
+      this.cronJob.stop();
+    }
+    return super.stop();
   }
 }
 

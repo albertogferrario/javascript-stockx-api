@@ -57,9 +57,26 @@ declare namespace StockxApi {
   }
 
   interface Variant {
-    id: string;
-    size: string;
-    sizeType: string;
+    variantId: string;
+    variantName: string;
+    variantValue: string;
+    productId: string;
+    sizeChart: {
+      availableConversions: Array<{
+        size: string;
+        type: string;
+      }>;
+      defaultConversion: {
+        size: string;
+        type: string;
+      };
+    };
+    gtins?: Array<{
+      identifier: string;
+      type: string;
+    }>;
+    isFlexEligible: boolean;
+    isDirectEligible: boolean;
     [key: string]: any;
   }
 
