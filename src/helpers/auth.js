@@ -54,9 +54,31 @@ function parseAuthCode(callbackUrl) {
   return { code, state };
 }
 
+async function exchangeAuthCode(code, clientId, clientSecret, redirectUri, tokenUrl, audience = 'gateway.stockx.com') {
+  const axios = require('axios');
+
+  const params = new URLSearchParams({
+    grant_type: 'authorization_code',
+    code,
+    redirect_uri: redirectUri,
+    client_id: clientId,
+    client_secret: clientSecret,
+    audience,
+  });
+
+  const response = await axios.post(tokenUrl, params.toString(), {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+
+  return response.data;
+}
+
 module.exports = {
   buildAuthUrl,
   buildTokenUrl,
   generatePKCE,
   parseAuthCode,
+  exchangeAuthCode,
 };

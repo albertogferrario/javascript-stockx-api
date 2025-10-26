@@ -145,8 +145,17 @@ const authUrl = helpers.auth.buildAuthUrl(
 // Parse callback URL
 const { code } = helpers.auth.parseAuthCode(callbackUrl);
 
-// Exchange code for tokens (includes audience parameter)
-const tokenResponse = await helpers.refresh.refreshToken(
+// Exchange authorization code for tokens
+const tokenResponse = await helpers.auth.exchangeAuthCode(
+  code,
+  'your-client-id',
+  'your-client-secret', 
+  'https://your-app.com/callback',
+  'https://accounts.stockx.com/oauth/token'
+);
+
+// Or refresh existing tokens
+const refreshResponse = await helpers.refresh.refreshToken(
   refreshToken,
   'your-client-id',
   'your-client-secret',
@@ -389,11 +398,12 @@ app.get('/callback', async (req, res) => {
   try {
     const { code } = helpers.auth.parseAuthCode(req.url);
 
-    // Exchange code for tokens
-    const tokenResponse = await helpers.refresh.refreshToken(
+    // Exchange authorization code for tokens
+    const tokenResponse = await helpers.auth.exchangeAuthCode(
       code,
       CLIENT_ID,
       CLIENT_SECRET,
+      REDIRECT_URI,
       'https://accounts.stockx.com/oauth/token'
     );
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { helpers } = require('../index');
+const { createEnvFileManager } = require('./env-utils');
 const fs = require('fs');
 const path = require('path');
 
@@ -88,29 +89,11 @@ async function autoRefreshTokens(bufferMinutes = 30) {
     console.log('📝 New access token:', tokens.accessToken.substring(0, 50) + '...');
     console.log('📅 Expires at:', tokens.expiresAt);
     
-    // Update .env.test file
+    // Update .env.test file using script utility
     const envPath = path.join(__dirname, '../.env.test');
-    let envContent = fs.readFileSync(envPath, 'utf8');
+    const envManager = createEnvFileManager(envPath);
+    envManager.updateTokens(tokens.accessToken, tokens.refreshToken);
     
-    // Update access token
-    envContent = envContent.replace(
-      /STOCKX_JWT_TOKEN=.*/,
-      `STOCKX_JWT_TOKEN=${tokens.accessToken}`
-    );
-    
-    // Update refresh token if provided
-    if (tokens.refreshToken) {
-      if (envContent.includes('STOCKX_REFRESH_TOKEN=')) {
-        envContent = envContent.replace(
-          /STOCKX_REFRESH_TOKEN=.*/,
-          `STOCKX_REFRESH_TOKEN=${tokens.refreshToken}`
-        );
-      } else {
-        envContent += `\nSTOCKX_REFRESH_TOKEN=${tokens.refreshToken}`;
-      }
-    }
-    
-    fs.writeFileSync(envPath, envContent);
     console.log('💾 Updated .env.test with new tokens');
     
     return true;

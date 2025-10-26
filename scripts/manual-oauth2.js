@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { helpers } = require('../index');
+const { createEnvFileManager } = require('./env-utils');
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
@@ -68,54 +69,29 @@ async function manualOAuth2Flow() {
 
         console.log('✅ Authorization code extracted successfully');
 
-        // Exchange code for tokens
+        // Exchange code for tokens using helper
         console.log('🔄 Exchanging code for tokens...');
         
-        const axios = require('axios');
-        const params = new URLSearchParams({
-          grant_type: 'authorization_code',
-          code: code,
-          redirect_uri: REDIRECT_URI,
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET
-        });
+        const tokenResponse = await helpers.auth.exchangeAuthCode(
+          code,
+          CLIENT_ID,
+          CLIENT_SECRET,
+          REDIRECT_URI,
+          TOKEN_URL
+        );
 
-        const tokenResponse = await axios.post(TOKEN_URL, params.toString(), {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-
-        const tokens = helpers.token.parse(tokenResponse.data);
+        const tokens = helpers.token.parse(tokenResponse);
         
         console.log('🎉 Tokens received successfully!');
         console.log('📝 Access token:', tokens.accessToken.substring(0, 50) + '...');
         console.log('🔄 Refresh token:', tokens.refreshToken ? tokens.refreshToken.substring(0, 30) + '...' : 'Not provided');
         console.log('📅 Expires at:', tokens.expiresAt);
 
-        // Update .env.test file with both access and refresh tokens
+        // Update .env.test file using script utility
         const envPath = path.join(__dirname, '../.env.test');
-        let envContent = fs.readFileSync(envPath, 'utf8');
+        const envManager = createEnvFileManager(envPath);
+        envManager.updateTokens(tokens.accessToken, tokens.refreshToken);
         
-        // Update access token
-        envContent = envContent.replace(
-          /STOCKX_JWT_TOKEN=.*/,
-          `STOCKX_JWT_TOKEN=${tokens.accessToken}`
-        );
-        
-        // Update or add refresh token
-        if (tokens.refreshToken) {
-          if (envContent.includes('STOCKX_REFRESH_TOKEN=')) {
-            envContent = envContent.replace(
-              /STOCKX_REFRESH_TOKEN=.*/,
-              `STOCKX_REFRESH_TOKEN=${tokens.refreshToken}`
-            );
-          } else {
-            envContent += `\nSTOCKX_REFRESH_TOKEN=${tokens.refreshToken}`;
-          }
-        }
-        
-        fs.writeFileSync(envPath, envContent);
         console.log('💾 Updated .env.test with new access token');
         if (tokens.refreshToken) {
           console.log('💾 Updated .env.test with refresh token');

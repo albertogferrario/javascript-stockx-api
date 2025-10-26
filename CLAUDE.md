@@ -88,10 +88,20 @@ The API uses OAuth2 with the following official flow:
 - **Required Scopes**: `['offline_access', 'openid']`
 - **Token Storage**: Credentials saved to `.env.test` file
 
-### Token Refresh Flow:
+### OAuth Token Exchange and Refresh:
 ```javascript
 const { helpers } = require('./index');
 
+// Exchange authorization code for tokens
+const tokenResponse = await helpers.auth.exchangeAuthCode(
+  authCode,
+  clientId,
+  clientSecret,
+  redirectUri,
+  'https://accounts.stockx.com/oauth/token'
+);
+
+// Refresh existing tokens
 const newTokens = await helpers.refresh.refreshToken(
   refreshToken,
   clientId, 
