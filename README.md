@@ -22,6 +22,8 @@ npm install @albertogferrario/stockx-api
 
 ## Quick Start
 
+### Basic Usage
+
 ```javascript
 const StockxApi = require('@albertogferrario/stockx-api');
 
@@ -45,6 +47,56 @@ const marketData = await stockxApi.catalog.getVariantMarketData(
 );
 ```
 
+### Complete User Flow: Slug to Pricing
+
+**Most common scenario**: Get pricing for all sizes of a product from its slug.
+
+```javascript
+async function getProductPricing(slug, currency = 'USD') {
+  const stockxApi = new StockxApi(apiKey, jwt);
+  
+  // Step 1: Get product details from slug
+  const product = await stockxApi.catalog.getProductBySlug(slug);
+  console.log(`Found: ${product.title}`);
+  
+  // Step 2: Get all available sizes
+  const variants = await stockxApi.catalog.getVariants(product.productId);
+  console.log(`Available sizes: ${variants.map(v => v.variantValue).join(', ')}`);
+  
+  // Step 3: Get pricing for each size
+  const pricing = [];
+  for (const variant of variants.slice(0, 5)) { // First 5 sizes
+    try {
+      const marketData = await stockxApi.catalog.getVariantMarketData(
+        product.productId,
+        variant.variantId,
+        currency
+      );
+      
+      pricing.push({
+        size: variant.variantValue,
+        lowestAsk: marketData.lowestAskAmount,
+        highestBid: marketData.highestBidAmount,
+        currency: currency
+      });
+    } catch (error) {
+      console.log(`No pricing data for size ${variant.variantValue}`);
+    }
+  }
+  
+  return { product, pricing };
+}
+
+// Usage
+const result = await getProductPricing('nike-dunk-low-se-easter-w');
+console.log(result.pricing);
+// Output: [
+//   { size: '5W', lowestAsk: '178', highestBid: null, currency: 'USD' },
+//   { size: '5.5W', lowestAsk: '227', highestBid: null, currency: 'USD' },
+//   ...
+// ]
+```
+
 ## Authentication
 
 StockX uses OAuth2 Authorization Code Flow. You need to:
@@ -53,33 +105,60 @@ StockX uses OAuth2 Authorization Code Flow. You need to:
 2. Implement OAuth2 flow to obtain JWT tokens
 3. Use the `offline_access` scope to get refresh tokens
 
-### Using OAuth2 Helpers
+### Easy OAuth2 Setup
+
+**Option 1: Automated OAuth Flow**
+```bash
+# Set up your credentials in .env.test first
+node scripts/oauth2-flow.js
+```
+This opens a browser, handles the OAuth flow automatically, and saves tokens.
+
+**Option 2: Manual OAuth Flow**
+```bash
+# For environments where callback servers can't run
+node scripts/manual-oauth2.js
+```
+This provides URLs to copy/paste manually.
+
+**Option 3: Token Refresh**
+```bash
+# Refresh expired tokens automatically
+node scripts/auto-refresh.js
+```
+
+### OAuth2 Helpers (Advanced)
 
 ```javascript
 const { helpers } = require('@albertogferrario/stockx-api');
 
-// Generate authorization URL
+// Generate authorization URL (includes required audience parameter)
 const authUrl = helpers.auth.buildAuthUrl(
   'https://accounts.stockx.com/oauth',
   'your-client-id',
   'https://your-app.com/callback',
-  ['offline_access', 'openid']
+  ['offline_access', 'openid'],
+  'oauth-state',
+  'gateway.stockx.com'  // Required audience
 );
-
-// Generate PKCE challenge (recommended)
-const pkce = helpers.auth.generatePKCE();
-// Store pkce.verifier securely for token exchange
 
 // Parse callback URL
 const { code } = helpers.auth.parseAuthCode(callbackUrl);
 
-// Exchange code for tokens
+// Exchange code for tokens (includes audience parameter)
 const tokenResponse = await helpers.refresh.refreshToken(
-  code,
+  refreshToken,
   'your-client-id',
   'your-client-secret',
-  'https://accounts.stockx.com/oauth/token'
+  'https://accounts.stockx.com/oauth/token',
+  'gateway.stockx.com'  // Required audience
 );
+
+// Parse token response
+const tokens = helpers.token.parse(tokenResponse);
+console.log('Access Token:', tokens.accessToken);
+console.log('Refresh Token:', tokens.refreshToken);
+console.log('Expires At:', tokens.expiresAt);
 ```
 
 ## API Reference
