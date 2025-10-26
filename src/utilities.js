@@ -5,11 +5,14 @@ function getMillisecondsToNextCronExpressionTick(cronExpression) {
 }
 
 async function timeoutPromise(promise, timeout) {
-  const timeoutPromise_ = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Request timed out')), timeout)
-  );
+  let timeoutHandle;
+  const timeoutPromiseInstance = new Promise((_, reject) => {
+    timeoutHandle = setTimeout(() => reject(new Error('Request timed out')), timeout);
+  });
 
-  return Promise.race([promise, timeoutPromise_]);
+  const result = await Promise.race([promise, timeoutPromiseInstance]);
+  clearTimeout(timeoutHandle);
+  return result;
 }
 
 module.exports = {

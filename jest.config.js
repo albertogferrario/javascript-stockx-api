@@ -5,6 +5,6 @@
 
 module.exports = {
   testEnvironment: 'node',
-  testRegex: '/tests/.*\\.(j|t)sx?$',
-  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/src'],
+  testRegex: '(^(?!.*tmp/).*tests/.*\\.(j|t)sx?$)',
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/src', '<rootDir>/tmp/'],
 };

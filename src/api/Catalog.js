@@ -1,4 +1,4 @@
-const AbstractResource = require("./AbstractResource");
+const AbstractResource = require('./AbstractResource');
 
 class Catalog extends AbstractResource {
   getVariants = async (productId) => (await this.client.get(`/catalog/products/${productId}/variants`)).data;
@@ -16,14 +16,14 @@ class Catalog extends AbstractResource {
     if (!searchResults.products || searchResults.products.length === 0) {
       throw new Error(`Product not found with slug: ${slug}`);
     }
-    
+
     // Find product with exact urlKey match
-    const exactMatch = searchResults.products.find(product => product.urlKey === slug);
-    
+    const exactMatch = searchResults.products.find((product) => product.urlKey === slug);
+
     if (!exactMatch) {
       throw new Error(`Product not found with slug: ${slug}`);
     }
-    
+
     return exactMatch;
   };
 
@@ -36,13 +36,13 @@ class Catalog extends AbstractResource {
       throw new Error('pageSize query param must be between 1 and 50');
     }
 
-    const query_ = new URLSearchParams({
+    const searchQuery = new URLSearchParams({
       query,
       pageNumber,
-      pageSize
+      pageSize,
     }).toString();
 
-    return (await this.client.get(`/catalog/search?${query_}`)).data;
+    return (await this.client.get(`/catalog/search?${searchQuery}`)).data;
   };
 }
 

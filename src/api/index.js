@@ -1,4 +1,4 @@
-const Catalog = require("./Catalog");
+const Catalog = require('./Catalog');
 
 module.exports = {
   Catalog,

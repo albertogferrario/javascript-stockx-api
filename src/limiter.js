@@ -1,6 +1,6 @@
-const Bottleneck = require("bottleneck");
-const cron = require("cron");
-const {getMillisecondsToNextCronExpressionTick} = require("./utilities");
+const Bottleneck = require('bottleneck');
+const cron = require('cron');
+const { getMillisecondsToNextCronExpressionTick } = require('./utilities');
 
 const BOTTLENECK_RESERVOIR_REFRESH_INTERVAL_PRECISION = 250;
 

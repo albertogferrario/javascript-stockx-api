@@ -21,15 +21,15 @@ class MemoryStore {
 }
 
 class StorageInterface {
-  async get(key) {
+  async get(_key) {
     throw new Error('get() method must be implemented');
   }
 
-  async set(key, value) {
+  async set(_key, _value) {
     throw new Error('set() method must be implemented');
   }
 
-  async delete(key) {
+  async delete(_key) {
     throw new Error('delete() method must be implemented');
   }
 
@@ -53,14 +53,14 @@ function createFileStore(filePath, options = {}) {
   const readStore = async () => {
     try {
       const data = await fs.readFile(filePath, 'utf8');
-      let parsed = JSON.parse(data);
+      const parsed = JSON.parse(data);
 
       if (encrypt && secret) {
         const decipher = crypto.createDecipher('aes-256-cbc', secret);
-        Object.keys(parsed).forEach(key => {
+        Object.keys(parsed).forEach((key) => {
           if (parsed[key]) {
             parsed[key] = JSON.parse(
-              decipher.update(parsed[key], 'hex', 'utf8') + decipher.final('utf8')
+              decipher.update(parsed[key], 'hex', 'utf8') + decipher.final('utf8'),
             );
           }
         });
@@ -77,11 +77,11 @@ function createFileStore(filePath, options = {}) {
 
   const writeStore = async (store) => {
     await ensureDir();
-    let data = { ...store };
+    const data = { ...store };
 
     if (encrypt && secret) {
       const cipher = crypto.createCipher('aes-256-cbc', secret);
-      Object.keys(data).forEach(key => {
+      Object.keys(data).forEach((key) => {
         if (data[key]) {
           data[key] = cipher.update(JSON.stringify(data[key]), 'utf8', 'hex') + cipher.final('hex');
         }
@@ -113,7 +113,7 @@ function createFileStore(filePath, options = {}) {
 
     async clear() {
       await writeStore({});
-    }
+    },
   };
 }
 
