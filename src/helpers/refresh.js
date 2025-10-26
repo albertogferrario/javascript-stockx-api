@@ -31,11 +31,11 @@ function createInterceptor(client, options = {}) {
     async (error) => {
       const originalRequest = error.config;
 
-      if (!shouldRefresh(error) || originalRequest._retry >= maxRetries) {
+      if (!shouldRefresh(error) || (originalRequest.retryCount || 0) >= maxRetries) {
         return Promise.reject(error);
       }
 
-      originalRequest._retry = (originalRequest._retry || 0) + 1;
+      originalRequest.retryCount = (originalRequest.retryCount || 0) + 1;
 
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -56,7 +56,7 @@ function createInterceptor(client, options = {}) {
         const newToken = await onRefresh();
         isRefreshing = false;
         onRefreshed(newToken);
-        
+
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return client.request(originalRequest);
       } catch (refreshError) {
@@ -64,20 +64,21 @@ function createInterceptor(client, options = {}) {
         onRefreshFailed(refreshError);
         return Promise.reject(refreshError);
       }
-    }
+    },
   );
 
   return client;
 }
 
-async function refreshToken(refreshToken, clientId, clientSecret, tokenUrl) {
+async function refreshToken(refreshTokenValue, clientId, clientSecret, tokenUrl, audience = 'gateway.stockx.com') {
   const axios = require('axios');
-  
+
   const params = new URLSearchParams({
     grant_type: 'refresh_token',
-    refresh_token: refreshToken,
+    refresh_token: refreshTokenValue,
     client_id: clientId,
     client_secret: clientSecret,
+    audience,
   });
 
   const response = await axios.post(tokenUrl, params.toString(), {

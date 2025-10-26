@@ -1,12 +1,13 @@
 const crypto = require('crypto');
 
-function buildAuthUrl(baseUrl, clientId, redirectUri, scopes = ['offline_access'], state = null) {
+function buildAuthUrl(baseUrl, clientId, redirectUri, scopes = ['offline_access', 'openid'], state = null, audience = 'gateway.stockx.com') {
   const url = new URL(`${baseUrl}/authorize`);
   const params = {
     response_type: 'code',
     client_id: clientId,
     redirect_uri: redirectUri,
     scope: scopes.join(' '),
+    audience,
   };
 
   if (state) {

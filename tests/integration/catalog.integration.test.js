@@ -293,16 +293,16 @@ testSuite('StockX API Integration Tests', () => {
         );
 
         log('Market data received:');
-        log(`  Lowest Ask: $${marketData.lowestAsk || 'N/A'}`);
-        log(`  Highest Bid: $${marketData.highestBid || 'N/A'}`);
-        log(`  Last Sale: $${marketData.lastSale || 'N/A'}`);
+        log(`  Lowest Ask: $${marketData.lowestAskAmount || 'N/A'}`);
+        log(`  Highest Bid: $${marketData.highestBidAmount || 'N/A'}`);
+        log(`  Currency: ${marketData.currencyCode || 'N/A'}`);
         
         logVerbose('Full market data:', marketData);
 
         expect(marketData).toBeDefined();
-        expect(marketData).toHaveProperty('lowestAsk');
-        expect(marketData).toHaveProperty('highestBid');
-        expect(marketData).toHaveProperty('lastSale');
+        expect(marketData).toHaveProperty('lowestAskAmount');
+        expect(marketData).toHaveProperty('highestBidAmount');
+        expect(marketData).toHaveProperty('currencyCode');
       } catch (error) {
         logError('Failed to get market data', error);
         throw error;
@@ -325,7 +325,9 @@ testSuite('StockX API Integration Tests', () => {
       );
 
       expect(marketDataEUR).toBeDefined();
-      expect(marketDataEUR).toHaveProperty('lowestAsk');
+      expect(marketDataEUR).toHaveProperty('lowestAskAmount');
+      expect(marketDataEUR).toHaveProperty('currencyCode');
+      expect(marketDataEUR.currencyCode).toBe('EUR');
     }, TEST_TIMEOUT);
   });
 

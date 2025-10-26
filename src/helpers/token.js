@@ -16,7 +16,15 @@ function decode(jwt) {
   }
 }
 
-function isExpired(jwt, bufferSeconds = 0) {
+function isExpired(jwt, bufferSeconds = 0, expiresAt = null) {
+  // If we have an explicit expiration date (for encrypted tokens), use that
+  if (expiresAt) {
+    const now = Date.now();
+    const expiry = new Date(expiresAt).getTime();
+    return expiry - (bufferSeconds * 1000) <= now;
+  }
+
+  // Otherwise try to decode the JWT (for standard tokens)
   const payload = decode(jwt);
   if (!payload || !payload.exp) {
     return true;
