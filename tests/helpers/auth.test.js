@@ -15,7 +15,8 @@ describe('auth helpers', () => {
       expect(parsed.searchParams.get('response_type')).toBe('code');
       expect(parsed.searchParams.get('client_id')).toBe('client123');
       expect(parsed.searchParams.get('redirect_uri')).toBe('https://app.com/callback');
-      expect(parsed.searchParams.get('scope')).toBe('offline_access');
+      expect(parsed.searchParams.get('scope')).toBe('offline_access openid');
+      expect(parsed.searchParams.get('audience')).toBe('gateway.stockx.com');
       expect(parsed.searchParams.get('state')).toBeNull();
     });
 
