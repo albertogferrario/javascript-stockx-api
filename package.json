@@ -1,6 +1,6 @@
 {
   "name": "@albertogferrario/stockx-api",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "StockX Public API node package with OAuth2 helpers and rate limiting",
   "main": "index.js",
   "types": "index.d.ts",
@@ -36,6 +36,9 @@
     "lint:fix": "eslint \"src/**/*.js\" --fix",
     "format": "prettier --write \"src/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\"",
+    "oauth2": "node scripts/manual-oauth2.js",
+    "refresh-token": "node scripts/refresh-token.js",
+    "test-api": "node scripts/test-api.js",
     "prepublishOnly": "npm test"
   },
   "repository": {
@@ -50,8 +53,14 @@
   "homepage": "https://github.com/albertogferrario/javascript-stockx-api#readme",
   "devDependencies": {
     "dotenv": "^16.6.1",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jest": "^29.0.1",
+    "express": "^5.1.0",
     "jest": "^29.7.0",
-    "jest-mock-axios": "^4.7.3"
+    "jest-mock-axios": "^4.7.3",
+    "open": "^10.2.0"
   },
   "dependencies": {
     "axios": "^1.7.2",
